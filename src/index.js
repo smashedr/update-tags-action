@@ -37,7 +37,8 @@ const semver = require('semver')
 
         console.log('sha:', github.context.sha)
 
-        const tag_name = github.context.payload.release.tag_name
+        // const tag_name = github.context.payload.release.tag_name
+        const tag_name = 'v1.2.3'
         console.log('tag_name', tag_name)
 
         const major = semver.major(tag_name)
