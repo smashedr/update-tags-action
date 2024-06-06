@@ -4,22 +4,18 @@ const semver = require('semver')
 
 ;(async () => {
     try {
-        console.log('-'.repeat(40))
-        console.log('github.context', github.context)
-        console.log('-'.repeat(40))
-        console.log('process.env:', process.env)
-        console.log('-'.repeat(40))
-        console.log('release', github.context.payload.release)
-        console.log('-'.repeat(40))
+        // console.log('-'.repeat(40))
+        // console.log('github.context', github.context)
+        // console.log('-'.repeat(40))
+        // console.log('process.env:', process.env)
+        // console.log('-'.repeat(40))
+        // console.log('release', github.context.payload.release)
+        // console.log('-'.repeat(40))
 
         if (!github.context.payload.release) {
             console.log('Skipping non-release:', github.context.eventName)
             // return
         }
-
-        // const parsedTag = github.context.ref.replace('refs/tags/', '')
-        // console.log('parsedTag:', parsedTag)
-        // console.log('GITHUB_REF_NAME:', process.env.GITHUB_REF_NAME)
 
         const githubToken = core.getInput('token')
         console.log('token:', githubToken)
@@ -34,9 +30,6 @@ const semver = require('semver')
         console.log('owner:', owner)
         console.log('repo:', repo)
 
-        console.log('-'.repeat(40))
-        const octokit = github.getOctokit(githubToken)
-
         const sha = github.context.sha
         console.log('sha:', sha)
 
@@ -49,47 +42,44 @@ const semver = require('semver')
         console.log('minor', minor)
 
         console.log('-'.repeat(40))
-        // console.log('minor', semver.pre(tag_name))
 
         const tag = `${tagPrefix}${major}`
         console.log('tag', tag)
+        const ref = `tags/${tag}`
+        console.log('ref', ref)
+
+        const octokit = github.getOctokit(githubToken)
 
         try {
             const getRef = await octokit.rest.git.getRef({
                 owner,
                 repo,
-                ref: `tags/${tag}`,
+                ref,
             })
-            console.log('sha', getRef.data.object.sha)
+            console.log(`Current sha: ${getRef.data.object.sha}`)
             if (sha !== getRef.data.object.sha) {
-                console.log(`Updating tag: ${tag} to sha: ${sha}`)
-                const updateRef = await octokit.rest.git.updateRef({
+                console.log(`Updating tag: "${tag}" to sha: ${sha}`)
+                await octokit.rest.git.updateRef({
                     owner,
                     repo,
-                    ref: `tags/${tag}`,
+                    ref,
                     sha,
                 })
-                console.log('updateRef:', updateRef)
             } else {
-                console.log(`Tag: ${tag} already points to sha: ${sha}`)
+                console.log(`Tag: "${tag}" already points to sha: ${sha}`)
             }
         } catch (e) {
             console.log(e.message)
             console.log(`Creating new tag: ${tag} to sha: ${sha}`)
+            await octokit.rest.git.createRef({
+                owner,
+                repo,
+                ref,
+                sha,
+            })
         }
 
-        // const release = await octokit.rest.repos.getReleaseByTag({
-        //     owner: github.context.repo.owner,
-        //     repo: github.context.repo.repo,
-        //     tag: releaseTag,
-        // })
-        // console.log('release:', release)
-        // if (!release?.data) {
-        //     return core.setFailed(`Release Not Found: ${releaseTag}`)
-        // }
-
-        core.setFailed('this is set to always fail')
-        console.log('AHHHHHHHHHHHH')
+        core.setFailed('set to always fail')
     } catch (error) {
         console.log(error)
         core.setFailed(error.message)
