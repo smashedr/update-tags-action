@@ -37,7 +37,8 @@ const semver = require('semver')
         console.log('-'.repeat(40))
         const octokit = github.getOctokit(githubToken)
 
-        console.log('sha:', github.context.sha)
+        const sha = github.context.sha
+        console.log('sha:', sha)
 
         const tag_name = github.context.payload.release.tag_name
         console.log('tag_name', tag_name)
@@ -50,21 +51,24 @@ const semver = require('semver')
         console.log('-'.repeat(40))
         // console.log('minor', semver.pre(tag_name))
 
-        const ref = `${tagPrefix}${major}`
-        console.log('ref', ref)
+        const tag = `${tagPrefix}${major}`
+        console.log('tag', tag)
 
         try {
             const getRef = await octokit.rest.git.getRef({
                 owner,
                 repo,
-                ref: `tags/${tagPrefix}${major}`,
+                ref: `tags/${tag}`,
             })
-            console.log('getRef', getRef)
-            console.log('-'.repeat(40))
-            console.log('data', getRef.data)
             console.log('sha', getRef.data.object.sha)
+            if (sha !== getRef.data.object.sha) {
+                console.log(`Updating tag: ${tag} to sha: ${sha}`)
+            } else {
+                console.log(`Tag: ${tag} already points to sha: ${sha}`)
+            }
         } catch (e) {
             console.log(e.message)
+            console.log(`Creating new tag: ${tag} to sha: ${sha}`)
         }
 
         // const release = await octokit.rest.repos.getReleaseByTag({
