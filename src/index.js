@@ -8,20 +8,17 @@ const github = require('@actions/github')
         console.log('-'.repeat(40))
         console.log('process.env:', process.env)
         console.log('-'.repeat(40))
-        console.log('-'.repeat(40))
-
         console.log('release', github.context.payload.release)
-        console.log('repo', github.context.repo)
-        console.log('tag_name', github.context.payload.release.tag_name)
+        console.log('-'.repeat(40))
 
         if (!github.context.payload.release) {
             console.log('Skipping non-release:', github.context.eventName)
             // return
         }
 
-        const parsedTag = github.context.ref.replace('refs/tags/', '')
-        console.log('parsedTag:', parsedTag)
-        console.log('GITHUB_REF_NAME:', process.env.GITHUB_REF_NAME)
+        // const parsedTag = github.context.ref.replace('refs/tags/', '')
+        // console.log('parsedTag:', parsedTag)
+        // console.log('GITHUB_REF_NAME:', process.env.GITHUB_REF_NAME)
 
         const githubToken = core.getInput('token')
         console.log('token:', githubToken)
@@ -36,7 +33,15 @@ const github = require('@actions/github')
 
         console.log('-'.repeat(40))
         const octokit = github.getOctokit(githubToken)
-        console.log('octokit:', octokit)
+
+        console.log('sha:', github.context.sha)
+        console.log('tag_name', github.context.payload.release.tag_name)
+
+        // await octokit.rest.git.getRef({
+        //     owner,
+        //     repo,
+        //     ref,
+        // })
 
         // const release = await octokit.rest.repos.getReleaseByTag({
         //     owner: github.context.repo.owner,
