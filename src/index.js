@@ -13,16 +13,18 @@ const { parse } = require('csv-parse/sync')
         console.log('-'.repeat(40))
         console.log('-'.repeat(40))
 
-        // Check Release
-        if (!github.context.payload.release) {
-            core.info(`Skipping non-release: ${github.context.eventName}`)
-            // return
-        }
+        // // Check Release
+        // if (!github.context.payload.release) {
+        //     core.info(`Skipping non-release: ${github.context.eventName}`)
+        //     // return
+        // }
         console.log('ref', github.context.payload.ref)
         if (!github.context.payload.ref.startsWith('refs/tags/')) {
             core.info('NO TAGS PUSHED')
             // return
         }
+        const newTag = github.context.ref.replace('refs/tags/', '')
+        console.log('newTag:', newTag)
 
         // Process Inputs
         const githubToken = core.getInput('token')
@@ -58,11 +60,11 @@ const { parse } = require('csv-parse/sync')
         console.log('repo:', repo)
         const sha = github.context.sha
         console.log('sha:', sha)
-        const tag_name = github.context.payload.release.tag_name
-        console.log('tag_name', tag_name)
-        const major = semver.major(tag_name)
+        // const tag_name = github.context.payload.release.tag_name
+        // console.log('tag_name', tag_name)
+        const major = semver.major(newTag)
         console.log('major', major)
-        const minor = semver.minor(tag_name)
+        const minor = semver.minor(newTag)
         console.log('minor', minor)
 
         // // Collect Tags
