@@ -54,12 +54,12 @@ const semver = require('semver')
         console.log('ref', ref)
 
         try {
-            const gitRef = await octokit.rest.git.gitRef({
+            const getRef = await octokit.rest.git.getRef({
                 owner,
                 repo,
                 ref: `tags/${tagPrefix}${major}`,
             })
-            console.log('gitRef', gitRef)
+            console.log('getRef', getRef)
         } catch (e) {
             console.log(e.message)
         }
