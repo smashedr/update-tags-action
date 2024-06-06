@@ -8,6 +8,10 @@ const github = require('@actions/github')
         console.log('-'.repeat(20))
         console.log('process.env:', process.env)
         console.log('-'.repeat(20))
+        console.log(
+            'github.context.payload.release',
+            github.context.payload.release
+        )
 
         // if (github.context.eventName !== 'release') {
         //     console.log('Skipping non-release:', github.context.eventName)
@@ -37,6 +41,7 @@ const github = require('@actions/github')
         // }
 
         core.setFailed('this is set to always fail')
+        console.log('AHHHHHHHHHHHH')
     } catch (error) {
         console.log(error)
         core.setFailed(error.message)
