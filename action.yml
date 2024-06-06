@@ -9,6 +9,10 @@ inputs:
     token:
         description: 'GitHub Token from secrets.GITHUB_TOKEN'
         required: true
+    prefix:
+        description: 'Tag Prefix'
+        required: false
+        default: 'v'
     major:
         description: 'Update Major Tag'
         required: false

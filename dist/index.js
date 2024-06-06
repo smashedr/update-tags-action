@@ -33638,6 +33638,8 @@ const semver = __nccwpck_require__(1383)
 
         const githubToken = core.getInput('token')
         console.log('token:', githubToken)
+        const tagPrefix = core.getInput('prefix')
+        console.log('prefix:', tagPrefix)
         const updateMajor = core.getInput('major')
         console.log('major:', updateMajor)
         const updateMinor = core.getInput('minor')
@@ -33661,11 +33663,18 @@ const semver = __nccwpck_require__(1383)
         const minor = semver.minor(tag_name)
         console.log('minor', minor)
 
-        // await octokit.rest.git.getRef({
-        //     owner,
-        //     repo,
-        //     ref,
-        // })
+        console.log('-'.repeat(40))
+        // console.log('minor', semver.pre(tag_name))
+
+        const ref = `${tagPrefix}${major}`
+        console.log('ref', ref)
+
+        const gitRef = await octokit.rest.git.getRef({
+            owner,
+            repo,
+            ref,
+        })
+        console.log('gitRef', gitRef)
 
         // const release = await octokit.rest.repos.getReleaseByTag({
         //     owner: github.context.repo.owner,
