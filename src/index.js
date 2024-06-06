@@ -10,14 +10,13 @@ const semver = require('semver')
         // console.log('github.context', github.context)
         // console.log('-'.repeat(40))
         // console.log('release', github.context.payload.release)
-        // console.log('-'.repeat(40))
+        console.log('-'.repeat(40))
 
+        // Check Release
         if (!github.context.payload.release) {
             core.info(`Skipping non-release: ${github.context.eventName}`)
             return
         }
-
-        console.log('-'.repeat(40))
 
         // Process Inputs
         const githubToken = core.getInput('token')
@@ -33,18 +32,14 @@ const semver = require('semver')
         const { owner, repo } = github.context.repo
         console.log('owner:', owner)
         console.log('repo:', repo)
-
         const sha = github.context.sha
         console.log('sha:', sha)
-
         const tag_name = github.context.payload.release.tag_name
         console.log('tag_name', tag_name)
         const major = semver.major(tag_name)
         console.log('major', major)
         const minor = semver.minor(tag_name)
         console.log('minor', minor)
-
-        console.log('-'.repeat(40))
 
         // Collect Tags
         const tags = []
@@ -59,8 +54,6 @@ const semver = require('semver')
             core.notice('Major and Minor false, nothing to do!')
             return
         }
-
-        console.log('-'.repeat(40))
 
         // Process Tags
         const octokit = github.getOctokit(githubToken)
