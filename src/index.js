@@ -28,8 +28,13 @@ const semver = require('semver')
         const updateMinor = core.getInput('minor')
         console.log('minor:', updateMinor)
 
+        const emptyInput = core.getInput('fake')
+        console.log('emptyInput:', emptyInput)
+
         const inputTags = core.getInput('tags')
         console.log('tags:', inputTags)
+        inputTags.split(/[\s,]+/)
+        console.log('inputTags:', inputTags)
         // const parsedTags = parse(tagsInput, {
         //     delimiter: ",",
         //     trim: true,
