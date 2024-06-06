@@ -1,6 +1,7 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
 const semver = require('semver')
+const { parse } = require('csv-parse/sync')
 
 ;(async () => {
     try {
@@ -38,11 +39,17 @@ const semver = require('semver')
         console.log('tags:', inputTags)
         inputTags = inputTags.split(/[\s,]+/)
         console.log('inputTags:', inputTags)
-        // const parsedTags = parse(tagsInput, {
-        //     delimiter: ",",
-        //     trim: true,
-        //     relax_column_count: true,
-        // }).flat();
+        const parsedTags = parse(inputTags, {
+            delimiter: ',',
+            trim: true,
+            relax_column_count: true,
+        })
+        console.log('parsedTags:', parsedTags)
+        const flatTags = parsedTags.flat()
+        console.log('flatTags:', flatTags)
+
+        console.log('-'.repeat(40))
+        console.log('-'.repeat(40))
 
         // Set Variables
         const { owner, repo } = github.context.repo
