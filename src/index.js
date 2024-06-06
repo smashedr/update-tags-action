@@ -13,12 +13,13 @@ const semver = require('semver')
         // console.log('-'.repeat(40))
 
         if (!github.context.payload.release) {
-            console.log('Skipping non-release:', github.context.eventName)
-            // return
+            core.info(`Skipping non-release: ${github.context.eventName}`)
+            return
         }
 
         console.log('-'.repeat(40))
 
+        // Process Inputs
         const githubToken = core.getInput('token')
         console.log('token:', githubToken)
         const tagPrefix = core.getInput('prefix')
@@ -28,6 +29,7 @@ const semver = require('semver')
         const updateMinor = core.getInput('minor')
         console.log('minor:', updateMinor)
 
+        // Set Variables
         const { owner, repo } = github.context.repo
         console.log('owner:', owner)
         console.log('repo:', repo)
@@ -44,6 +46,7 @@ const semver = require('semver')
 
         console.log('-'.repeat(40))
 
+        // Collect Tags
         const tags = []
         if (updateMajor !== 'false') {
             tags.push(`${tagPrefix}${major}`)
@@ -59,10 +62,10 @@ const semver = require('semver')
 
         console.log('-'.repeat(40))
 
+        // Process Tags
         const octokit = github.getOctokit(githubToken)
-
         for (const tag of tags) {
-            console.log('tag', tag)
+            core.info(`----- Processing tag: ${tag} -----`)
             const ref = `tags/${tag}`
             console.log('ref', ref)
             const reference = await getRef(octokit, owner, repo, ref)
@@ -80,7 +83,7 @@ const semver = require('semver')
             }
         }
 
-        core.setFailed('set to always fail for job retry')
+        // core.setFailed('set to always fail for job retry')
     } catch (e) {
         core.debug(e)
         core.info(e.message)
