@@ -13,14 +13,11 @@ const { parse } = require('csv-parse/sync')
         console.log('-'.repeat(40))
         console.log('-'.repeat(40))
 
-        // // Check Release
-        // if (!github.context.payload.release) {
-        //     core.info(`Skipping non-release: ${github.context.eventName}`)
-        //     // return
-        // }
-        console.log('ref', github.context.payload.ref)
+        // Check Tag
+        console.log('ref', github.context.ref)
+        console.log('payload.ref', github.context.payload.ref)
         if (!github.context.payload.ref.startsWith('refs/tags/')) {
-            core.info('NO TAGS PUSHED')
+            core.info(`Skipping due to no tags: ${github.context.payload.ref}`)
             // return
         }
         const newTag = github.context.ref.replace('refs/tags/', '')
