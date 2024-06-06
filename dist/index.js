@@ -33654,8 +33654,7 @@ const semver = __nccwpck_require__(1383)
 
         console.log('sha:', github.context.sha)
 
-        // const tag_name = github.context.payload.release.tag_name
-        const tag_name = 'v1.2.3'
+        const tag_name = github.context.payload.release.tag_name
         console.log('tag_name', tag_name)
 
         const major = semver.major(tag_name)
@@ -33669,10 +33668,10 @@ const semver = __nccwpck_require__(1383)
         const ref = `${tagPrefix}${major}`
         console.log('ref', ref)
 
-        const gitRef = await octokit.rest.git.getRef({
+        const gitRef = await octokit.rest.git.listMatchingRefs({
             owner,
             repo,
-            ref,
+            ref: `tags/${tagPrefix}${major}`,
         })
         console.log('gitRef', gitRef)
 
