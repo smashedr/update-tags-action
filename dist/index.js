@@ -31083,13 +31083,12 @@ const github = __nccwpck_require__(5438)
 
 ;(async () => {
     try {
-        console.log('-'.repeat(20))
+        console.log('-'.repeat(40))
         console.log('github.context', github.context)
-        console.log('-'.repeat(20))
+        console.log('-'.repeat(40))
         console.log('process.env:', process.env)
-        console.log('-'.repeat(20))
-        console.log('-'.repeat(20))
-        console.log('-'.repeat(20))
+        console.log('-'.repeat(40))
+        console.log('-'.repeat(40))
 
         console.log('release', github.context.payload.release)
         console.log('repo', github.context.repo)
@@ -31104,6 +31103,8 @@ const github = __nccwpck_require__(5438)
         console.log('parsedTag:', parsedTag)
         console.log('GITHUB_REF_NAME:', process.env.GITHUB_REF_NAME)
 
+        const githubToken = core.getInput('token')
+        console.log('token:', githubToken)
         const updateMajor = core.getInput('major')
         console.log('major:', updateMajor)
         const updateMinor = core.getInput('minor')
@@ -31113,8 +31114,9 @@ const github = __nccwpck_require__(5438)
         console.log('owner:', owner)
         console.log('repo:', repo)
 
-        // const octokit = github.getOctokit(githubToken)
-        // console.log('octokit:', octokit)
+        console.log('-'.repeat(40))
+        const octokit = github.getOctokit(githubToken)
+        console.log('octokit:', octokit)
 
         // const release = await octokit.rest.repos.getReleaseByTag({
         //     owner: github.context.repo.owner,

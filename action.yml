@@ -6,6 +6,9 @@ branding:
     color: 'red'
 
 inputs:
+    token:
+        description: 'GitHub Token from secrets.GITHUB_TOKEN'
+        required: true
     major:
         description: 'Update Major Tag'
         required: false
