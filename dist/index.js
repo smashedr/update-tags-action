@@ -35003,16 +35003,14 @@ const { parse } = __nccwpck_require__(4393)
 
         let inputTags = core.getInput('tags')
         console.log('tags:', inputTags)
-        inputTags = inputTags.split(/[\s,]+/)
-        console.log('inputTags:', inputTags)
-        const parsedTags = parse(core.getInput('tags'), {
+        // inputTags = inputTags.split(/[\s,]+/)
+        // console.log('inputTags:', inputTags)
+        const parsedTags = parse(inputTags, {
             delimiter: ',',
             trim: true,
             relax_column_count: true,
-        })
+        }).flat()
         console.log('parsedTags:', parsedTags)
-        const flatTags = parsedTags.flat()
-        console.log('flatTags:', flatTags)
 
         console.log('-'.repeat(40))
         console.log('-'.repeat(40))
