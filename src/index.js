@@ -41,6 +41,9 @@ const semver = require('semver')
         const minor = semver.minor(tag_name)
         console.log('minor', minor)
 
+        const octokit = github.getOctokit(githubToken)
+
+        console.log('-'.repeat(40))
         console.log('-'.repeat(40))
 
         const tag = `${tagPrefix}${major}`
@@ -48,36 +51,48 @@ const semver = require('semver')
         const ref = `tags/${tag}`
         console.log('ref', ref)
 
-        const octokit = github.getOctokit(githubToken)
-
-        try {
-            const getRef = await octokit.rest.git.getRef({
-                owner,
-                repo,
-                ref,
-            })
-            console.log(`Current sha: ${getRef.data.object.sha}`)
-            if (sha !== getRef.data.object.sha) {
+        const reference = await getRef(octokit, owner, repo, ref)
+        console.log('reference', reference)
+        if (reference) {
+            if (sha !== reference.data.object.sha) {
                 console.log(`Updating tag: "${tag}" to sha: ${sha}`)
-                await octokit.rest.git.updateRef({
-                    owner,
-                    repo,
-                    ref,
-                    sha,
-                })
+                await updateRef(octokit, owner, repo, ref, sha)
             } else {
                 console.log(`Tag: "${tag}" already points to sha: ${sha}`)
             }
-        } catch (e) {
-            console.log(e.message)
-            console.log(`Creating new tag: ${tag} to sha: ${sha}`)
-            await octokit.rest.git.createRef({
-                owner,
-                repo,
-                ref,
-                sha,
-            })
+        } else {
+            console.log(`Creating new tag: "${tag}" to sha: ${sha}`)
+            await createRef(octokit, owner, repo, ref, sha)
         }
+
+        // try {
+        //     const getRef = await octokit.rest.git.getRef({
+        //         owner,
+        //         repo,
+        //         ref,
+        //     })
+        //     console.log(`Current sha: ${getRef.data.object.sha}`)
+        //     if (sha !== getRef.data.object.sha) {
+        //         console.log(`Updating tag: "${tag}" to sha: ${sha}`)
+        //         await octokit.rest.git.updateRef({
+        //             owner,
+        //             repo,
+        //             ref,
+        //             sha,
+        //         })
+        //     } else {
+        //         console.log(`Tag: "${tag}" already points to sha: ${sha}`)
+        //     }
+        // } catch (e) {
+        //     console.log(e.message)
+        //     console.log(`Creating new tag: ${tag} to sha: ${sha}`)
+        //     await octokit.rest.git.createRef({
+        //         owner,
+        //         repo,
+        //         ref,
+        //         sha,
+        //     })
+        // }
 
         core.setFailed('set to always fail')
     } catch (error) {
@@ -85,3 +100,44 @@ const semver = require('semver')
         core.setFailed(error.message)
     }
 })()
+
+async function getRef(octokit, owner, repo, ref) {
+    try {
+        return octokit.rest.git.getRef({
+            owner,
+            repo,
+            ref,
+        })
+    } catch (e) {
+        console.log(e.message)
+        return null
+    }
+}
+
+async function createRef(octokit, owner, repo, ref, sha) {
+    try {
+        await octokit.rest.git.createRef({
+            owner,
+            repo,
+            ref,
+            sha,
+        })
+    } catch (e) {
+        // This is a serious error and should be annotated but not fail
+        console.log(e.message)
+    }
+}
+
+async function updateRef(octokit, owner, repo, ref, sha) {
+    try {
+        return octokit.rest.git.updateRef({
+            owner,
+            repo,
+            ref,
+            sha,
+        })
+    } catch (e) {
+        // This is a serious error and should be annotated but not fail
+        console.log(e.message)
+    }
+}
