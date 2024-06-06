@@ -31115,6 +31115,8 @@ const github = __nccwpck_require__(5438)
         // if (!release?.data) {
         //     return core.setFailed(`Release Not Found: ${releaseTag}`)
         // }
+
+        core.setFailed('this is set to always fail')
     } catch (error) {
         console.log(error)
         core.setFailed(error.message)
