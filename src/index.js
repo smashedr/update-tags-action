@@ -61,7 +61,8 @@ const semver = require('semver')
             })
             console.log('getRef', getRef)
             console.log('-'.repeat(40))
-            console.log('sha', getRef.object.sha)
+            console.log('data', getRef.data)
+            console.log('sha', getRef.data.object.sha)
         } catch (e) {
             console.log(e.message)
         }
