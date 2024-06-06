@@ -1,5 +1,6 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
+const semver = require('semver')
 
 ;(async () => {
     try {
@@ -35,7 +36,14 @@ const github = require('@actions/github')
         const octokit = github.getOctokit(githubToken)
 
         console.log('sha:', github.context.sha)
-        console.log('tag_name', github.context.payload.release.tag_name)
+
+        const tag_name = github.context.payload.release.tag_name
+        console.log('tag_name', tag_name)
+
+        const major = semver.major(tag_name)
+        console.log('major', major)
+        const minor = semver.minor(tag_name)
+        console.log('minor', minor)
 
         // await octokit.rest.git.getRef({
         //     owner,
