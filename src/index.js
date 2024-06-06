@@ -37,8 +37,6 @@ const { parse } = require('csv-parse/sync')
 
         let inputTags = core.getInput('tags')
         console.log('tags:', inputTags)
-        // inputTags = inputTags.split(/[\s,]+/)
-        // console.log('inputTags:', inputTags)
         const parsedTags = parse(inputTags, {
             delimiter: ',',
             trim: true,
