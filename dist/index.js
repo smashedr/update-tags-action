@@ -33678,6 +33678,13 @@ const semver = __nccwpck_require__(1383)
             console.log('sha', getRef.data.object.sha)
             if (sha !== getRef.data.object.sha) {
                 console.log(`Updating tag: ${tag} to sha: ${sha}`)
+                const updateRef = await octokit.rest.git.updateRef({
+                    owner,
+                    repo,
+                    ref: `tags/${tag}`,
+                    sha,
+                })
+                console.log('updateRef:', updateRef)
             } else {
                 console.log(`Tag: ${tag} already points to sha: ${sha}`)
             }
