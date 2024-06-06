@@ -115,11 +115,12 @@ const semver = require('semver')
 
 async function getRef(octokit, owner, repo, ref) {
     try {
-        return octokit.rest.git.getRef({
+        const result = await octokit.rest.git.getRef({
             owner,
             repo,
             ref,
         })
+        return result
     } catch (e) {
         console.log(e.message)
         return null
@@ -128,12 +129,13 @@ async function getRef(octokit, owner, repo, ref) {
 
 async function createRef(octokit, owner, repo, ref, sha) {
     try {
-        await octokit.rest.git.createRef({
+        const result = await octokit.rest.git.createRef({
             owner,
             repo,
             ref,
             sha,
         })
+        return result
     } catch (e) {
         console.log(e)
         core.error(`Failed to create tag: ${ref}`)
@@ -142,7 +144,7 @@ async function createRef(octokit, owner, repo, ref, sha) {
 
 async function updateRef(octokit, owner, repo, ref, sha) {
     try {
-        return octokit.rest.git.updateRef({
+        await octokit.rest.git.updateRef({
             owner,
             repo,
             ref,
