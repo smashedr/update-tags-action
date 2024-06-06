@@ -18,6 +18,11 @@ const { parse } = require('csv-parse/sync')
             core.info(`Skipping non-release: ${github.context.eventName}`)
             // return
         }
+        console.log('ref', github.context.payload.ref)
+        if (!github.context.payload.ref.startsWith('refs/tags/')) {
+            core.info('NO TAGS PUSHED')
+            // return
+        }
 
         // Process Inputs
         const githubToken = core.getInput('token')
