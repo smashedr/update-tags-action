@@ -60,6 +60,8 @@ const semver = require('semver')
                 ref: `tags/${tagPrefix}${major}`,
             })
             console.log('getRef', getRef)
+            console.log('-'.repeat(40))
+            console.log('sha', getRef.object.sha)
         } catch (e) {
             console.log(e.message)
         }
