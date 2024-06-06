@@ -8,17 +8,13 @@ const { parse } = require('csv-parse/sync')
         console.log('-'.repeat(40))
         console.log('process.env:', process.env)
         console.log('-'.repeat(40))
-        console.log('-'.repeat(40))
         console.log('github.context', github.context)
-        console.log('-'.repeat(40))
         console.log('-'.repeat(40))
 
         // Check Tag
-        console.log('ref', github.context.ref)
-        console.log('payload.ref', github.context.payload.ref)
-        if (!github.context.payload.ref.startsWith('refs/tags/')) {
-            core.info(`Skipping due to no tags: ${github.context.payload.ref}`)
-            // return
+        if (!github.context.ref.startsWith('refs/tags/')) {
+            core.info(`Skipping due to non-tags: ${github.context.ref}`)
+            return
         }
         const newTag = github.context.ref.replace('refs/tags/', '')
         console.log('newTag:', newTag)
@@ -32,24 +28,8 @@ const { parse } = require('csv-parse/sync')
         console.log('major:', updateMajor)
         const updateMinor = core.getInput('minor')
         console.log('minor:', updateMinor)
-
-        const emptyInput = core.getInput('fake')
-        console.log('emptyInput:', emptyInput)
-        if (emptyInput) {
-            console.log('EMPTY INPUT PRESENT')
-        }
-
-        let inputTags = core.getInput('tags')
+        const inputTags = core.getInput('tags')
         console.log('tags:', inputTags)
-        const parsedTags = parse(inputTags, {
-            delimiter: ',',
-            trim: true,
-            relax_column_count: true,
-        }).flat()
-        console.log('parsedTags:', parsedTags)
-
-        console.log('-'.repeat(40))
-        console.log('-'.repeat(40))
 
         // Set Variables
         const { owner, repo } = github.context.repo
@@ -57,27 +37,36 @@ const { parse } = require('csv-parse/sync')
         console.log('repo:', repo)
         const sha = github.context.sha
         console.log('sha:', sha)
-        // const tag_name = github.context.payload.release.tag_name
-        // console.log('tag_name', tag_name)
         const major = semver.major(newTag)
         console.log('major', major)
         const minor = semver.minor(newTag)
         console.log('minor', minor)
 
-        // // Collect Tags
-        // const tags = []
-        // if (updateMajor !== 'false') {
-        //     tags.push(`${tagPrefix}${major}`)
-        // }
-        // if (updateMinor !== 'false') {
-        //     tags.push(`${tagPrefix}${major}.${minor}`)
-        // }
-        // console.log('tags', tags)
-        // if (!tags.length) {
-        //     core.notice('Major and Minor false, nothing to do!')
-        //     return
-        // }
-        //
+        // Collect Tags
+        const collectedTags = []
+        if (inputTags) {
+            const parsedTags = parse(inputTags, {
+                delimiter: ',',
+                trim: true,
+                relax_column_count: true,
+            }).flat()
+            console.log('parsedTags:', parsedTags)
+            collectedTags.push(...parsedTags)
+        }
+        if (updateMajor !== 'false') {
+            collectedTags.push(`${tagPrefix}${major}`)
+        }
+        if (updateMinor !== 'false') {
+            collectedTags.push(`${tagPrefix}${major}.${minor}`)
+        }
+        console.log('tacollectedTagsgs', collectedTags)
+        if (!collectedTags.length) {
+            core.notice('No Tags to Process!')
+            return
+        }
+        const tags = [...new Set(collectedTags)]
+        console.log('tags', tags)
+
         // // Process Tags
         // const octokit = github.getOctokit(githubToken)
         // for (const tag of tags) {
