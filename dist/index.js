@@ -33645,10 +33645,13 @@ const semver = __nccwpck_require__(1383)
 
         const emptyInput = core.getInput('fake')
         console.log('emptyInput:', emptyInput)
+        if (emptyInput) {
+            console.log('EMPTY INPUT PRESENT')
+        }
 
-        const inputTags = core.getInput('tags')
+        let inputTags = core.getInput('tags')
         console.log('tags:', inputTags)
-        inputTags.split(/[\s,]+/)
+        inputTags = inputTags.split(/[\s,]+/)
         console.log('inputTags:', inputTags)
         // const parsedTags = parse(tagsInput, {
         //     delimiter: ",",

@@ -30,6 +30,9 @@ const semver = require('semver')
 
         const emptyInput = core.getInput('fake')
         console.log('emptyInput:', emptyInput)
+        if (emptyInput) {
+            console.log('EMPTY INPUT PRESENT')
+        }
 
         let inputTags = core.getInput('tags')
         console.log('tags:', inputTags)
