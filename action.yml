@@ -21,6 +21,9 @@ inputs:
         description: 'Update Minor Tag'
         required: false
         default: 'true'
+    tags:
+        description: 'Extra Tags'
+        required: false
 
 runs:
     using: 'node20'

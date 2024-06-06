@@ -33643,8 +33643,8 @@ const semver = __nccwpck_require__(1383)
         const updateMinor = core.getInput('minor')
         console.log('minor:', updateMinor)
 
-        const inputs = await github.context.getInputs()
-        console.log('inputs:', inputs)
+        const inputTags = core.getInput('tags')
+        console.log('tags:', inputTags)
         // const parsedTags = parse(tagsInput, {
         //     delimiter: ",",
         //     trim: true,
