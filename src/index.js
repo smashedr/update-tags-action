@@ -53,12 +53,16 @@ const semver = require('semver')
         const ref = `${tagPrefix}${major}`
         console.log('ref', ref)
 
-        const gitRef = await octokit.rest.git.listMatchingRefs({
-            owner,
-            repo,
-            ref: `tags/${tagPrefix}${major}`,
-        })
-        console.log('gitRef', gitRef)
+        try {
+            const gitRef = await octokit.rest.git.gitRef({
+                owner,
+                repo,
+                ref: `tags/${tagPrefix}${major}`,
+            })
+            console.log('gitRef', gitRef)
+        } catch (e) {
+            console.log(e.message)
+        }
 
         // const release = await octokit.rest.repos.getReleaseByTag({
         //     owner: github.context.repo.owner,
